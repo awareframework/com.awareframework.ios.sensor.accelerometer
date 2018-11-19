@@ -1,5 +1,5 @@
 import XCTest
-import com.awareframework.ios.sensor.accelerometer
+import com_awareframework_ios_sensor_accelerometer
 
 class Tests: XCTestCase {
     
