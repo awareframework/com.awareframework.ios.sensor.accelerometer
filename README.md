@@ -5,20 +5,20 @@
 [![License](https://img.shields.io/cocoapods/l/com.awareframework.ios.sensor.accelerometer.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.accelerometer)
 [![Platform](https://img.shields.io/cocoapods/p/com.awareframework.ios.sensor.accelerometer.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.accelerometer)
 
-## Example
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
 ## Requirements
 iOS 10 or later
 
 ## Installation
 
-com.aware.ios.sensor.accelerometer is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+com.aware.ios.sensor.accelerometer is available through [CocoaPods](http://cocoapods.org). To install it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'com.awareframework.ios.sensor.accelerometer'
+```
+
+Import com.awareframework.ios.sensor.accelerometer library into your source code.
+```swift
+import com_awareframework_ios_sensor_accelerometer
 ```
 
 ## Data Representations
@@ -63,7 +63,6 @@ accelerometer.stop()
 ```
 
 ## Author
-
 Yuuki Nishiyama, tetujin@ht.sfc.keio.ac.jp
 
 ## Related Links
