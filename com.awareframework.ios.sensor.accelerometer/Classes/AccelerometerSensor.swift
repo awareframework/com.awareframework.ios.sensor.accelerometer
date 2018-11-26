@@ -9,7 +9,6 @@
 import Foundation
 import com_awareframework_ios_sensor_core
 import RealmSwift
-import SwiftyJSON
 import CoreMotion
 
 extension Notification.Name {
@@ -52,8 +51,8 @@ public class AccelerometerSensor:AwareSensor {
          * The defualt value of Android is 200000 microsecond.
          * The value means 5Hz
          */
-        public var frequency:Double  = 5 // Hz
-        public var period:Double     = 0 // min
+        public var frequency:Int    = 5 // Hz
+        public var period:Double    = 0 // min
         /**
          * Accelerometer threshold (Double).  Do not record consecutive points if
          * change in value of all axes is less than this.
@@ -61,23 +60,10 @@ public class AccelerometerSensor:AwareSensor {
         public var threshold: Double = 0
         public var sensorObserver:AccelerometerObserver?
         
-        public override init() {}
-        
-        public init(_ json:JSON){
-            if let period = json["period"].double{
-                self.period = period
-            }
-            
-            if let threshold = json["threshold"].double{
-                self.threshold = threshold
-            }
-            
-            if let frequency = json["frequency"].double{
-                self.frequency = frequency
-            }
-        }
+        public override init() { }
         
         public init(_ config:Dictionary<String, Any>){
+            super.init()
             if let period = config["period"] as? Double {
                 self.period = period
             }
@@ -86,9 +72,10 @@ public class AccelerometerSensor:AwareSensor {
                 self.threshold = threshold
             }
             
-            if let frequency = config["frequency"] as? Double{
+            if let frequency = config["frequency"] as? Int {
                 self.frequency = frequency
             }
+            self.set(config: config)
         }
         
         public func apply(closure: (_ config: AccelerometerSensor.Config ) -> Void) -> Self {
@@ -114,11 +101,11 @@ public class AccelerometerSensor:AwareSensor {
     public override func start() {
         // Make sure the accelerometer hardware is available.
         if self.motion.isAccelerometerAvailable {
-            self.motion.accelerometerUpdateInterval = 1.0/CONFIG.frequency
+            self.motion.accelerometerUpdateInterval = 1.0/Double(CONFIG.frequency)
             self.motion.startAccelerometerUpdates()
             
             // Configure a timer to fetch the data.
-            self.timer = Timer(fire: Date(), interval: 1.0/CONFIG.frequency, repeats: true, block: { (timer) in
+            self.timer = Timer(fire: Date(), interval: 1.0/Double(CONFIG.frequency), repeats: true, block: { (timer) in
                 // Get the accelerometer data.
                 if let accData = self.motion.accelerometerData {
                     // https://developer.apple.com/documentation/coremotion/getting_raw_accelerometer_events
