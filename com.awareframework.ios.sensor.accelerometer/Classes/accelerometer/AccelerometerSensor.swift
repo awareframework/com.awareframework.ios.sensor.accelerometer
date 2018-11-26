@@ -77,6 +77,20 @@ public class AccelerometerSensor:AwareSensor {
             }
         }
         
+        public init(_ config:Dictionary<String, Any>){
+            if let period = config["period"] as? Double {
+                self.period = period
+            }
+            
+            if let threshold = config ["threshold"] as? Double {
+                self.threshold = threshold
+            }
+            
+            if let frequency = config["frequency"] as? Double{
+                self.frequency = frequency
+            }
+        }
+        
         public func apply(closure: (_ config: AccelerometerSensor.Config ) -> Void) -> Self {
             closure(self)
             return self
@@ -121,9 +135,9 @@ public class AccelerometerSensor:AwareSensor {
                     let z = accData.acceleration.z // * 9.8
                     if let lastValue = self.LAST_VALUE {
                         if self.CONFIG.threshold > 0 &&
-                            abs(x - lastValue.x) < self.CONFIG.threshold &&
-                            abs(y - lastValue.y) < self.CONFIG.threshold &&
-                            abs(z - lastValue.z) < self.CONFIG.threshold {
+                            abs(x - lastValue.x) * 9.8 < self.CONFIG.threshold &&
+                            abs(y - lastValue.y) * 9.8 < self.CONFIG.threshold &&
+                            abs(z - lastValue.z) * 9.8 < self.CONFIG.threshold {
                             return
                         }
                     }
@@ -162,7 +176,7 @@ public class AccelerometerSensor:AwareSensor {
             })
             
             // Add the timer to the current run loop.
-            RunLoop.current.add(self.timer!, forMode: .defaultRunLoopMode)
+            RunLoop.current.add(self.timer!, forMode: RunLoop.Mode.default)
             
             if self.CONFIG.debug { print(AccelerometerSensor.TAG, "Accelerometer sensor active: \(self.CONFIG.frequency) hz") }
             self.notificationCenter.post(name: .actionAwareAccelerometerStart, object: nil)
