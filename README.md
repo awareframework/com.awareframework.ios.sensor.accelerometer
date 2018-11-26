@@ -56,7 +56,9 @@ let accelerometer = Accelerometer.init(Accelerometer.Config().apply{ config in
    condig.deviceId = UUID.init().uuidString
    config.debug    = true
 })
+
 accelerometer?.start()
+
 accelerometer?.stop()
 ```
 

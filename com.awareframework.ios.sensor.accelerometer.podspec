@@ -30,7 +30,7 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '10.0'
   
-  s.swift_version = '4.0'
+  s.swift_version = '4.2'
 
   s.source_files = 'com.awareframework.ios.sensor.accelerometer/Classes/**/*'
   
