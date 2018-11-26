@@ -51,15 +51,21 @@ Generate an accelerometer sensor instance and start/stop the sensor.
 
 ```swift
 let accelerometer = Accelerometer.init(Accelerometer.Config().apply{ config in
-config.sensorObserver = { (data, error) in
-// Your code here..
-}
-config.period   = 0.5
-condig.deviceId = UUID.init().uuidString
-config.debug    = true
+   config.sensorObserver = Observer()
+   config.period   = 0.5
+   condig.deviceId = UUID.init().uuidString
+   config.debug    = true
 })
-accelerometer.start()
-accelerometer.stop()
+accelerometer?.start()
+accelerometer?.stop()
+```
+
+```swift
+class Observer:AccelerometerObserver{
+   func onDataChanged(data: AccelerometerData){
+      // Your code here...
+   }
+}
 ```
 
 ## Author
