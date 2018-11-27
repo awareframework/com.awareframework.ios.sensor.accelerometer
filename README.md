@@ -8,6 +8,7 @@
 This sensor module allows us to manage 3-axis accelerometer data which is provided by iOS CoreMotion Library. Please check the link below for details. 
 
 > An accelerometer measures changes in velocity along one axis. All iOS devices have a three-axis accelerometer, which delivers acceleration values in each of the three axes. The values reported by the accelerometers are measured in increments of the gravitational acceleration, with the value 1.0 representing an acceleration of 9.8 meters per second (per second) in the given direction. Acceleration values may be positive or negative depending on the direction of the acceleration. 
+
 [ Apple | Getting Raw Accelerometer Events ](https://developer.apple.com/documentation/coremotion/getting_raw_accelerometer_events)
 
 ## Requirements

@@ -18,6 +18,33 @@ class Tests: XCTestCase {
         XCTAssert(true, "Pass")
     }
     
+    func testConfig(){
+        let frequency = 1;
+        let threshold = 0.5;
+        let period    = 1.0;
+        let config :Dictionary<String,Any> = ["frequency":frequency, "threshold":threshold, "period":period]
+        
+        var sensor = AccelerometerSensor.init(AccelerometerSensor.Config(config));
+        XCTAssertEqual(frequency, sensor.CONFIG.frequency)
+        XCTAssertEqual(threshold, sensor.CONFIG.threshold)
+        XCTAssertEqual(period, sensor.CONFIG.period)
+        
+        sensor = AccelerometerSensor.init(AccelerometerSensor.Config().apply{config in
+            config.frequency = frequency
+            config.threshold = threshold
+            config.period = period
+        });
+        XCTAssertEqual(frequency, sensor.CONFIG.frequency)
+        XCTAssertEqual(threshold, sensor.CONFIG.threshold)
+        XCTAssertEqual(period, sensor.CONFIG.period)
+        
+        sensor = AccelerometerSensor.init()
+        sensor.CONFIG.set(config: config)
+        XCTAssertEqual(frequency, sensor.CONFIG.frequency)
+        XCTAssertEqual(threshold, sensor.CONFIG.threshold)
+        XCTAssertEqual(period, sensor.CONFIG.period)
+    }
+    
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure() {

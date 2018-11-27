@@ -60,10 +60,13 @@ public class AccelerometerSensor:AwareSensor {
         public var threshold: Double = 0
         public var sensorObserver:AccelerometerObserver?
         
-        public override init() { }
-        
-        public init(_ config:Dictionary<String, Any>){
+        public override init() {
             super.init()
+            self.dbPath = "aware_accelerometer"
+        }
+        
+        public override func set(config: Dictionary<String, Any>) {
+            super.set(config: config)
             if let period = config["period"] as? Double {
                 self.period = period
             }
@@ -75,7 +78,6 @@ public class AccelerometerSensor:AwareSensor {
             if let frequency = config["frequency"] as? Int {
                 self.frequency = frequency
             }
-            self.set(config: config)
         }
         
         public func apply(closure: (_ config: AccelerometerSensor.Config ) -> Void) -> Self {
@@ -85,7 +87,7 @@ public class AccelerometerSensor:AwareSensor {
 
     }
     
-    override convenience init() {
+    public override convenience init() {
         self.init(AccelerometerSensor.Config())
     }
     
