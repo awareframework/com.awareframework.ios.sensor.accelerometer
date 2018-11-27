@@ -11,9 +11,6 @@ script:
   -scheme com.awareframework.ios.sensor.accelerometer-Example -sdk iphonesimulator12.1
   -destination OS=12.1,name="iPhone X" ONLY_ACTIVE_ARCH=NO CODE_SIGNING_REQUIRED=NO
   -allowProvisioningUpdates | XCPRETTY
-- pod lib lint com.awareframework.ios.sensor.accelerometer.podspec --allow-warnings
+
 after_success:
 - echo 'success!'
-env:
-  global:
-    secure: 7kLRRnvkGMdxzTxqxH0CS/gZUwNDETEafauAujWcosPs+12TEFNDywk9C/hOCGlTw6K3BQc4HUnVbqgzOh15cfF+saA81nNNrrUE57B345V9Ym81ORw1TJaJiRlU0E6z9iV8BbdJoPbFyRycDasufJXJamg/jbS+xLnBHdiMh/LyqWNh9DmteSjGdne6yM7Tp0Hdo+NXCnYhQWAnWPzTqW8bmj0so6Ixr3hj6ZylhuCVmGMNsFe30qaIaqhBXc4QK8f4djQDrZtGPmYp1bMCjHCn/dWhZGsgnG+cUiNoAYgcYgyAhOjqnmP7Gn5sDM0Am3CTuawrvWLzjI4/zMMFydJdO0mBnZtHy+6Lmm2qcAAcdTk28GGiYkXTSLMdoEwim5+6D10aYabneHb43Ty7o9lt0hXN4XsiPipiB50zqYvOvTmbVgSqkzi6yNS0LJD+4t0cpZQ54qKldr3hWDFmuHlzBFFgWt/C5OjylVyrLqbLf0OEmwIdqNcSZvx9lPZNDxkS+04yvs5MGKe/Nwpw0LdF0LbM37TSfjNWL/xMf4iIiKMyepp57x2o2jRUXXaG3kb1QinEEmqrtKbnKPA2xH4Nag0O17AbVz8TT01ATpjq33nJs6YCXA1jiTUm/jshofiLr/Er4Fqn0u2XD7aBMqmjPuTwcqJxNp79AogQnWs=
