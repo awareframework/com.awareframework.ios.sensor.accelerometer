@@ -14,6 +14,34 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "390197064D6625D2DE57791E46C98D00"
+               BuildableName = "com_awareframework_ios_sensor_core.framework"
+               BlueprintName = "com.awareframework.ios.sensor.core"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A48148D703285AFAED0A651FEED972AE"
+               BuildableName = "com_awareframework_ios_sensor_accelerometer.framework"
+               BlueprintName = "com.awareframework.ios.sensor.accelerometer"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "0C3F55D082407AD412F91982AB3E55F5"
                BuildableName = "Pods_com_awareframework_ios_sensor_accelerometer_Example.framework"
                BlueprintName = "Pods-com.awareframework.ios.sensor.accelerometer_Example"

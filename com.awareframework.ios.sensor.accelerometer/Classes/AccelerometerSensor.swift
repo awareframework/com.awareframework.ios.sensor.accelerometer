@@ -187,7 +187,7 @@ public class AccelerometerSensor:AwareSensor {
     ////////////////////////
     public override func sync(force: Bool = false) {
         if let engine = self.dbEngine {
-            engine.startSync(AccelerometerData.TABLE_NAME, DbSyncConfig().apply(closure: { config in
+            engine.startSync(AccelerometerData.TABLE_NAME, AccelerometerData.self, DbSyncConfig().apply(closure: { config in
             
             }))
         }

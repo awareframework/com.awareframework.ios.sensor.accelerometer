@@ -7,12 +7,27 @@
 //
 
 import UIKit
+import com_awareframework_ios_sensor_accelerometer
 
 class ViewController: UIViewController {
 
+    var sensor:AccelerometerSensor?
+    var timer:Timer?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        sensor = AccelerometerSensor.init(AccelerometerSensor.Config().apply{config in
+            config.debug = true
+            config.dbType = .REALM
+            config.frequency = 30
+        })
+        sensor?.start()
+        self.sensor?.sync(force: true)
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { (timer) in
+            self.sensor?.sync(force: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {
