@@ -15,6 +15,8 @@ extension Notification.Name {
     public static let actionAwareAccelerometer      = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER)
     public static let actionAwareAccelerometerStart = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_START)
     public static let actionAwareAccelerometerStop  = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_STOP)
+    public static let actionAwareAccelerometerSetLabel  = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_SET_LABEL)
+    public static let actionAwareAccelerometerSync  = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_SYNC)
 }
 
 public protocol AccelerometerObserver {
@@ -23,12 +25,13 @@ public protocol AccelerometerObserver {
 
 public extension AccelerometerSensor {
     /// keys ///
-    public static let ACTION_AWARE_ACCELEROMETER       = "ACTION_AWARE_ACCELEROMETER"
-    public static let ACTION_AWARE_ACCELEROMETER_START = "ACTION_AWARE_ACCELEROMETER_START"
-    public static let ACTION_AWARE_ACCELEROMETER_STOP  = "ACTION_AWARE_ACCELEROMETER_STOP"
-    public static let ACTION_AWARE_ACCELEROMETER_LABEL = "ACTION_AWARE_ACCELEROMETER_LABEL"
+    public static let ACTION_AWARE_ACCELEROMETER       = "com.awareframework.ios.sensor.accelerometer"
+    public static let ACTION_AWARE_ACCELEROMETER_START = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_START"
+    public static let ACTION_AWARE_ACCELEROMETER_STOP  = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_STOP"
+    public static let ACTION_AWARE_ACCELEROMETER_SYNC  = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_SYNC"
+    public static let ACTION_AWARE_ACCELEROMETER_SET_LABEL = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_SET_LABEL"
     public static var EXTRA_LABEL  = "label"
-    public static let TAG = "com.aware.accelerometer"
+    public static let TAG = "com.awareframework.ios.sensor.accelerometer"
 }
 
 public class AccelerometerSensor:AwareSensor {
@@ -98,8 +101,9 @@ public class AccelerometerSensor:AwareSensor {
         if config.debug { print(AccelerometerSensor.TAG,"Accelerometer sensor is created.") }
     }
     
-    
-    //////////////////////////
+    /**
+     * Start accelerometer sensor module
+     */
     public override func start() {
         // Make sure the accelerometer hardware is available.
         if self.motion.isAccelerometerAvailable {
@@ -119,9 +123,9 @@ public class AccelerometerSensor:AwareSensor {
                      * of 9.8 meters per second (per second) in the given direction. Acceleration values may
                      * be positive or negative depending on the direction of the acceleration.
                      */
-                    let x = accData.acceleration.x // * 9.8
-                    let y = accData.acceleration.y // * 9.8
-                    let z = accData.acceleration.z // * 9.8
+                    let x = accData.acceleration.x
+                    let y = accData.acceleration.y
+                    let z = accData.acceleration.z
                     if let lastValue = self.LAST_VALUE {
                         if self.CONFIG.threshold > 0 &&
                             abs(x - lastValue.x) * 9.8 < self.CONFIG.threshold &&
@@ -143,6 +147,7 @@ public class AccelerometerSensor:AwareSensor {
                     data.y = y
                     data.z = z
                     data.eventTimestamp = Int64(accData.timestamp*1000)
+                    data.label = self.CONFIG.label
                     
                     if let observer = self.CONFIG.sensorObserver {
                         observer.onDataChanged(data: data)
@@ -172,7 +177,9 @@ public class AccelerometerSensor:AwareSensor {
         }
     }
 
-    ///////////////////////
+    /**
+     * Stop accelerometer sensor module
+     */
     public override func stop() {
         if self.motion.isAccelerometerAvailable{
             if let timer = self.timer {
@@ -184,13 +191,25 @@ public class AccelerometerSensor:AwareSensor {
         }
     }
 
-    ////////////////////////
+    /**
+     * Sync accelerometer sensor module
+     */
     public override func sync(force: Bool = false) {
         if let engine = self.dbEngine {
             engine.startSync(AccelerometerData.TABLE_NAME, AccelerometerData.self, DbSyncConfig().apply(closure: { config in
-            
+                config.debug = true
+                config.batchSize = 1000
             }))
+            self.notificationCenter.post(name: .actionAwareAccelerometerSync, object: nil)
         }
+    }
+    
+    /**
+     * Set a label for a data
+     */
+    public func set(label:String){
+        self.CONFIG.label = label
+        self.notificationCenter.post(name: .actionAwareAccelerometerSetLabel, object: nil, userInfo: [AccelerometerSensor.EXTRA_LABEL:label])
     }
     
     struct AccData {
