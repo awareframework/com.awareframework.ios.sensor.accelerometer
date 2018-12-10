@@ -17,6 +17,8 @@ extension Notification.Name {
     public static let actionAwareAccelerometerStop  = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_STOP)
     public static let actionAwareAccelerometerSetLabel  = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_SET_LABEL)
     public static let actionAwareAccelerometerSync  = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_SYNC)
+    public static let actionAwareAccelerometerSyncSuccess  = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_SYNC_SUCCESS)
+    public static let actionAwareAccelerometerSyncFailure  = Notification.Name(AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_SYNC_FAILURE)
 }
 
 public protocol AccelerometerObserver {
@@ -29,6 +31,8 @@ public extension AccelerometerSensor {
     public static let ACTION_AWARE_ACCELEROMETER_START = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_START"
     public static let ACTION_AWARE_ACCELEROMETER_STOP  = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_STOP"
     public static let ACTION_AWARE_ACCELEROMETER_SYNC  = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_SYNC"
+    public static let ACTION_AWARE_ACCELEROMETER_SYNC_SUCCESS  = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_SYNC_SUCCESS"
+    public static let ACTION_AWARE_ACCELEROMETER_SYNC_FAILURE  = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_SYNC_FAILURE"
     public static let ACTION_AWARE_ACCELEROMETER_SET_LABEL = "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_SET_LABEL"
     public static var EXTRA_LABEL  = "label"
     public static let TAG = "com.awareframework.ios.sensor.accelerometer"
@@ -161,8 +165,20 @@ public class AccelerometerSensor:AwareSensor {
                     }
                     
                     let dataArray = Array(self.dataBuffer)
-                    self.dbEngine?.save(dataArray, AccelerometerData.TABLE_NAME)
-                    self.notificationCenter.post(name: .actionAwareAccelerometer , object: nil)
+                    OperationQueue().addOperation({ () -> Void in
+                        self.dbEngine?.save(dataArray){ error in
+                            if error != nil {
+                                if self.CONFIG.debug {
+                                    print(AccelerometerSensor.TAG, error.debugDescription)
+                                }
+                                return
+                            }
+                            // send notification in the main thread
+                            DispatchQueue.main.async {
+                                self.notificationCenter.post(name: .actionAwareAccelerometer , object: nil)
+                            }
+                        }
+                    })
                     
                     self.dataBuffer.removeAll()
                     self.LAST_SAVE = currentTime
@@ -199,6 +215,14 @@ public class AccelerometerSensor:AwareSensor {
             engine.startSync(AccelerometerData.TABLE_NAME, AccelerometerData.self, DbSyncConfig().apply(closure: { config in
                 config.debug = true
                 config.batchSize = 1000
+                config.dispatchQueue = DispatchQueue(label: "com.awareframework.ios.sensor.accelerometer.sync.queue")
+                config.completionHandler = { (status, error) in
+                    if (status) {
+                        self.notificationCenter.post(name: .actionAwareAccelerometerSyncSuccess, object: nil)
+                    }else{
+                        self.notificationCenter.post(name: .actionAwareAccelerometerSyncFailure, object: nil)
+                    }
+                }
             }))
             self.notificationCenter.post(name: .actionAwareAccelerometerSync, object: nil)
         }
@@ -207,7 +231,7 @@ public class AccelerometerSensor:AwareSensor {
     /**
      * Set a label for a data
      */
-    public func set(label:String){
+    public override func set(label:String){
         self.CONFIG.label = label
         self.notificationCenter.post(name: .actionAwareAccelerometerSetLabel, object: nil, userInfo: [AccelerometerSensor.EXTRA_LABEL:label])
     }

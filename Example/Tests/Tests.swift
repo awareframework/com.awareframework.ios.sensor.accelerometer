@@ -1,6 +1,7 @@
 import XCTest
 import RealmSwift
 import com_awareframework_ios_sensor_accelerometer
+import com_awareframework_ios_sensor_core
 
 class Tests: XCTestCase{
     
@@ -15,9 +16,13 @@ class Tests: XCTestCase{
         super.tearDown()
     }
     
-    func testSensingModule(){
+    var token1:NotificationToken? = nil
+    var token2:NotificationToken? = nil
+    
+    func testSensorModule(){
         
         #if targetEnvironment(simulator)
+        
         print("This test requires a real device.")
         
         #else
@@ -26,76 +31,130 @@ class Tests: XCTestCase{
             config.debug = true
             config.dbType = .REALM
             config.frequency = 30
+            config.dbPath = "acc_sensor_module"
         })
         sensor.start() // start sensor
+        
         let expect = expectation(description: "Sensing test (30FPS)")
-        let observer = NotificationCenter.default.addObserver(forName: Notification.Name.actionAwareAccelerometer, object: nil, queue: .main) { (notification) in
-            sensor.stop() // stop sensor
-            if let engine = sensor.dbEngine {
-                if let results =  engine.fetch(AccelerometerData.TABLE_NAME, AccelerometerData.self, nil) as? Results<Object>{
-                    print(results.count)
-                    let idealCount = sensor.CONFIG.frequency
-                    if results.count >= (idealCount-1) && results.count <= (idealCount+1) {
-                        expect.fulfill()
-                    }else{
-                        XCTFail()
+        if let realmEngine = sensor.dbEngine as? RealmEngine {
+            // remove old data
+            realmEngine.removeAll(AccelerometerData.self)
+            // get a RealmEngine Instance
+            if let realm = realmEngine.getRealmInstance() {
+                // set Realm DB observer
+                token1 = realm.observe { (notification, realm) in
+                    switch notification {
+                    case .didChange:
+                        // check database size
+                        let results = realm.objects(AccelerometerData.self)
+                        print(results.count)
+                        if(results.count > 20 && results.count < 40){
+                            expect.fulfill()
+                        }
+                        break;
+                    case .refreshRequired:
+                        break;
                     }
-                    engine.removeAll()
                 }
             }
         }
-        wait(for: [expect], timeout: 3)
-        NotificationCenter.default.removeObserver(observer)
+        
+        wait(for: [expect], timeout: 70)
+        sensor.stop()
         
         ///////// 1 fps ////////
         let sensor2 = AccelerometerSensor.init(AccelerometerSensor.Config().apply{ config in
             config.debug = true
             config.dbType = .REALM
             config.frequency = 1
+            config.dbPath = "acc_sensor_module_1hz"
         })
         sensor2.start() // start sensor
+        
         let expect2 = expectation(description: "Sensing test (1 FPS)")
-        NotificationCenter.default.addObserver(forName: Notification.Name.actionAwareAccelerometer, object: nil, queue: .main) { (notification) in
-            sensor2.stop() // stop sensor
-            if let engine = sensor2.dbEngine {
-                if let results =  engine.fetch(AccelerometerData.TABLE_NAME, AccelerometerData.self, nil) as? Results<Object>{
-                    print(results.count)
-                    let idealCount = sensor2.CONFIG.frequency
-                    if results.count >= (idealCount-1) && results.count <= (idealCount+1) {
-                        expect2.fulfill()
-                    }else{
-                        XCTFail()
+        if let realmEngine = sensor2.dbEngine as? RealmEngine {
+            // remove old data
+            realmEngine.removeAll(AccelerometerData.self)
+            // get a RealmEngine Instance
+            if let realm = realmEngine.getRealmInstance() {
+                // set Realm DB observer
+                token2 = realm.observe { (notification, realm) in
+                    switch notification {
+                    case .didChange:
+                        // check database size
+                        let results = realm.objects(AccelerometerData.self)
+                        print(results.count)
+                        if(results.count > 0 && results.count < 5){
+                            expect2.fulfill()
+                        }
+                        break;
+                    case .refreshRequired:
+                        break;
                     }
-                    engine.removeAll()
                 }
             }
         }
-        wait(for: [expect2], timeout: 3)
+        wait(for: [expect2], timeout: 70)
+        sensor2.stop()
+        #endif
+    }
+    
+    func testSyncModule(){
+        #if targetEnvironment(simulator)
+        
+        print("This test requires a real device.")
+        
+        #else
+        // success //
+        let sensor = AccelerometerSensor.init(AccelerometerSensor.Config().apply{ config in
+            config.debug = true
+            config.dbType = .REALM
+            config.dbHost = "node.awareframework.com:1001"
+            config.dbPath = "sync_acc_db"
+        })
+        if let engine = sensor.dbEngine as? RealmEngine {
+            for _ in 0..<100 {
+                engine.save(AccelerometerData())
+            }
+        }
+        let successExpectation = XCTestExpectation(description: "success sync")
+        let observer = NotificationCenter.default.addObserver(forName: Notification.Name.actionAwareAccelerometerSyncSuccess,
+                                               object: nil, queue: .main) { (notification) in
+            successExpectation.fulfill()
+        }
+        sensor.sync(force: true)
+        wait(for: [successExpectation], timeout: 20)
+        NotificationCenter.default.removeObserver(observer)
+        
+        ////////////////////////////////////
+        
+        // failure //
+        let sensor2 = AccelerometerSensor.init(AccelerometerSensor.Config().apply{ config in
+            config.debug = true
+            config.dbType = .REALM
+            config.dbHost = "node.awareframework.com.com" // wrong url
+            config.dbPath = "sync_acc_db"
+        })
+        let failureExpectation = XCTestExpectation(description: "failure sync")
+        let failureObserver = NotificationCenter.default.addObserver(forName: Notification.Name.actionAwareAccelerometerSyncFailure,
+                                                              object: nil, queue: .main) { (notification) in
+                                                                failureExpectation.fulfill()
+        }
+        if let engine = sensor2.dbEngine as? RealmEngine {
+            for _ in 0..<100 {
+                engine.save(AccelerometerData())
+            }
+        }
+        sensor2.sync(force: true)
+        wait(for: [failureExpectation], timeout: 20)
+        NotificationCenter.default.removeObserver(failureObserver)
         
         #endif
     }
     
-    func testSync(){
-//        let sensor = AccelerometerSensor.init(AccelerometerSensor.Config().apply{ config in
-//            config.debug = true
-//            config.dbType = .REALM
-//            config.dbHost = "node.awareframework.com/dgc"
-//        })
-//        sensor.start();
-//        sensor.enable();
-//        sensor.sync(force: true)
-        
-//        let syncManager = DbSyncManager.Builder()
-//            .setBatteryOnly(false)
-//            .setWifiOnly(false)
-//            .setSyncInterval(1)
-//            .build()
-//        
-//        syncManager.start()
-    }
-    
     func testObserver(){
         #if targetEnvironment(simulator)
+        
         print("This test requires a real device.")
         
         #else
@@ -218,7 +277,7 @@ class Tests: XCTestCase{
         XCTAssertEqual(frequency, sensor.CONFIG.frequency)
         XCTAssertEqual(threshold, sensor.CONFIG.threshold)
         XCTAssertEqual(period, sensor.CONFIG.period)
-        
+
         sensor = AccelerometerSensor.init(AccelerometerSensor.Config().apply{config in
             config.frequency = frequency
             config.threshold = threshold
@@ -227,7 +286,7 @@ class Tests: XCTestCase{
         XCTAssertEqual(frequency, sensor.CONFIG.frequency)
         XCTAssertEqual(threshold, sensor.CONFIG.threshold)
         XCTAssertEqual(period, sensor.CONFIG.period)
-        
+
         sensor = AccelerometerSensor.init()
         sensor.CONFIG.set(config: config)
         XCTAssertEqual(frequency, sensor.CONFIG.frequency)
