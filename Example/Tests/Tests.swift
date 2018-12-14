@@ -187,9 +187,9 @@ class Tests: XCTestCase{
                                                     if let results = resultsObject as? Results<Object> {
                                                         print("ideal count = ",sensor.CONFIG.frequency)
                                                         print("real count  = ",results.count)
-                                                        if results.count > 0 {
-                                                            if results.count >= sensor.CONFIG.frequency-1 &&
-                                                                results.count <= (sensor.CONFIG.frequency+1) {
+                                                        if results.count > 1 {
+                                                            if results.count >= sensor.CONFIG.frequency-2 &&
+                                                                results.count <= (sensor.CONFIG.frequency+2) {
                                                                 expect.fulfill()
                                                             }else{
                                                                 XCTFail()

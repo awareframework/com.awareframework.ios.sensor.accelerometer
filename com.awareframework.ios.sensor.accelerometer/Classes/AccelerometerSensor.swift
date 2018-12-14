@@ -160,7 +160,7 @@ public class AccelerometerSensor:AwareSensor {
                     self.dataBuffer.append(data)
                     ////////////////////////////////////////
                     
-                    if self.dataBuffer.count < Int(self.CONFIG.frequency) && currentTime > self.LAST_SAVE + (self.CONFIG.period * 60) {
+                    if currentTime < self.LAST_SAVE + (self.CONFIG.period * 60) {
                         return
                     }
                     
@@ -214,7 +214,7 @@ public class AccelerometerSensor:AwareSensor {
         if let engine = self.dbEngine {
             engine.startSync(AccelerometerData.TABLE_NAME, AccelerometerData.self, DbSyncConfig().apply(closure: { config in
                 config.debug = true
-                config.batchSize = 1000
+                config.batchSize = 100
                 config.dispatchQueue = DispatchQueue(label: "com.awareframework.ios.sensor.accelerometer.sync.queue")
                 config.completionHandler = { (status, error) in
                     var userInfo: Dictionary<String,Any> = [AccelerometerSensor.EXTRA_STATUS :status]
