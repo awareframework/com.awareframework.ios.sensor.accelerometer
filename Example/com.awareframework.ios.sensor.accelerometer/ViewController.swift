@@ -20,6 +20,7 @@ class ViewController: UIViewController {
 //        sensor = AccelerometerSensor.init(AccelerometerSensor.Config().apply{config in
 //            config.debug = true
 //            config.dbType = .REALM
+//            config.dbPath = "db/accelerometer"
 //            config.frequency = 30
 //            // config.dbHost = "node.awareframework.com:1001"
 //            config.dbHost = "node.awareframework.com/dgc_test"

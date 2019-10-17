@@ -33,7 +33,7 @@ class Tests: XCTestCase{
                     asyncExpectation = nil
                 }
             }
-        }
+        } 
         
         let expectObserver = expectation(description: "observer")
         let observer = Observer()
