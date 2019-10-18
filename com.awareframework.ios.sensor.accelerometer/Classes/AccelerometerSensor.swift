@@ -45,11 +45,11 @@ public class AccelerometerSensor:AwareSensor {
     
     ////////////////////////////////////
     var timer:Timer?
-    var motion = CMMotionManager()
+    public var motion = CMMotionManager()
     var dataBuffer:Array<AccelerometerData>  = Array<AccelerometerData>()
     
     var bufferTimeout:Double = 0.0
-    private var LAST_VALUE:AccData?
+    public var LAST_VALUE:CMAccelerometerData?
     private var LAST_TS:Double = 0.0
     private var LAST_SAVE:Double = 0.0
 
@@ -132,15 +132,14 @@ public class AccelerometerSensor:AwareSensor {
                     let z = accData.acceleration.z
                     if let lastValue = self.LAST_VALUE {
                         if self.CONFIG.threshold > 0 &&
-                            abs(x - lastValue.x) * 9.8 < self.CONFIG.threshold &&
-                            abs(y - lastValue.y) * 9.8 < self.CONFIG.threshold &&
-                            abs(z - lastValue.z) * 9.8 < self.CONFIG.threshold {
+                            abs(x - lastValue.acceleration.x) * 9.8 < self.CONFIG.threshold &&
+                            abs(y - lastValue.acceleration.y) * 9.8 < self.CONFIG.threshold &&
+                            abs(z - lastValue.acceleration.z) * 9.8 < self.CONFIG.threshold {
                             return
                         }
                     }
                     
-                    let acc = AccData.init(x,y,z)
-                    self.LAST_VALUE = acc
+                    self.LAST_VALUE = accData
                     
                     let currentTime:Double = Date().timeIntervalSince1970
                     self.LAST_TS = currentTime
@@ -238,14 +237,14 @@ public class AccelerometerSensor:AwareSensor {
         self.notificationCenter.post(name: .actionAwareAccelerometerSetLabel, object: self, userInfo: [AccelerometerSensor.EXTRA_LABEL:label])
     }
     
-    struct AccData {
-        public var x:Double
-        public var y:Double
-        public var z:Double
-        init(_ x:Double, _ y:Double, _ z:Double) {
-            self.x = x
-            self.y = y
-            self.z = z
-        }
-    }
+//    struct AccData {
+//        public var x:Double
+//        public var y:Double
+//        public var z:Double
+//        init(_ x:Double, _ y:Double, _ z:Double) {
+//            self.x = x
+//            self.y = y
+//            self.z = z
+//        }
+//    }
 }
