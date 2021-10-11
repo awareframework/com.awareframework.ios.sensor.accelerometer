@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'com.awareframework.ios.sensor.accelerometer'
-  s.version       = '0.4.4'
+  s.version       = '0.4.5'
   s.summary          = 'An Accelerometer Sensor Module for AWARE Framework'
 
 # This description is used to generate tags and improve search results.
@@ -40,5 +40,5 @@ This sensor module allows us to manage 3-axis accelerometer data which is provid
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'CoreMotion'
-  s.dependency 'com.awareframework.ios.sensor.core', '~> 0.4'
+  s.dependency = 'com.awareframework.ios.sensor.core', '~> 0.4.3'
 end
