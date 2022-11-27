@@ -99,7 +99,7 @@ Generate an accelerometer sensor instance and start/stop the sensor.
 let accelerometer = Accelerometer.init(Accelerometer.Config().apply{ config in
    config.sensorObserver = Observer()
    config.period   = 0.5
-   condig.deviceId = UUID.init().uuidString
+   config.deviceId = UUID.init().uuidString
    config.debug    = true
 })
 
