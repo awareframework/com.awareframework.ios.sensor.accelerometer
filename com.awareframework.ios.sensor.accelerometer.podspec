@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'com.awareframework.ios.sensor.accelerometer'
-  s.version       = '0.4.5'
+  s.version          = '0.6.0'
   s.summary          = 'An Accelerometer Sensor Module for AWARE Framework'
 
 # This description is used to generate tags and improve search results.
@@ -28,17 +28,13 @@ This sensor module allows us to manage 3-axis accelerometer data which is provid
   s.source           = { :git => 'https://github.com/awareframework/com.awareframework.ios.sensor.accelerometer.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/tetujin23'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
   
   s.swift_version = '4.2'
 
   s.source_files = 'com.awareframework.ios.sensor.accelerometer/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'com.awareframework.ios.sensor.accelerometer' => ['com.awareframework.ios.sensor.accelerometer/Assets/*.png']
-  # }
-
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'CoreMotion'
-  s.dependency = 'com.awareframework.ios.sensor.core', '~> 0.4.3'
+  s.dependency 'com.awareframework.ios.sensor.core', '~> 0.6.1'
 end
