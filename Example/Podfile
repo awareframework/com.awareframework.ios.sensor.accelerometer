@@ -1,5 +1,5 @@
-platform:'ios', '11.0'
 use_frameworks!
+platform:'ios', '13.0'
 
 target 'com.awareframework.ios.sensor.accelerometer_Example' do
   pod 'com.awareframework.ios.sensor.accelerometer', :path => '../'
