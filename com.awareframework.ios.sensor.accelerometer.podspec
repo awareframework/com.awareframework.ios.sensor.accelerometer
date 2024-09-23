@@ -37,5 +37,5 @@ This sensor module allows us to manage 3-axis accelerometer data which is provid
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'CoreMotion'
   
-  s.dependency 'com.awareframework.ios.sensor.core', '~> 0.7.3'
+  s.dependency 'com.awareframework.ios.sensor.core', '~> 0.7'
 end
