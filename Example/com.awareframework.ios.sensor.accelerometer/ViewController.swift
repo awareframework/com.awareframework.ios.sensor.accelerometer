@@ -21,7 +21,8 @@ class ViewController: UIViewController {
             config.debug = true
             config.dbType = .REALM
             config.dbPath = "accelerometer"
-            config.frequency = 30
+            config.frequency = 1
+            config.period = 0.1
             // config.dbHost = "node.awareframework.com:1001"
             config.dbHost = "node.awareframework.com/dgc_test"
             config.sensorObserver = Observer()
