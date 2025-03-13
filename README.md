@@ -24,7 +24,7 @@ You can integrate this framework into your project via Swift Package Manager (Sw
     * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...` 
 
 2. Find the package using the manager
-    * Select `Search Package URL` and type `git@github.com:tetujin/com.awareframework.ios.sensor.accelerometer.git`
+    * Select `Search Package URL` and type `git@github.com:awareframework/com.awareframework.ios.sensor.accelerometer.git`
 
 3. Import the package into your target.
 
