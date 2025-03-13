@@ -38,3 +38,10 @@ Carthage/Build
 Pods/
 Podfile.lock
 com.awareframework.ios.sensor.accelerometer.xcworkspace/
+
+
+.DS_Store
+.build
+Packages
+.swiftpm
+.*.sw?

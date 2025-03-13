@@ -1,9 +1,9 @@
 # AWARE: Accelerometer
 
-[![CI Status](https://img.shields.io/travis/awareframework/com.awareframework.ios.sensor.accelerometer.svg?style=flat)](https://travis-ci.org/awareframework/com.awareframework.ios.sensor.accelerometer)
 [![Version](https://img.shields.io/cocoapods/v/com.awareframework.ios.sensor.accelerometer.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.accelerometer)
 [![License](https://img.shields.io/cocoapods/l/com.awareframework.ios.sensor.accelerometer.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.accelerometer)
 [![Platform](https://img.shields.io/cocoapods/p/com.awareframework.ios.sensor.accelerometer.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.accelerometer)
+[![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
 This sensor module allows us to manage 3-axis accelerometer data which is provided by iOS CoreMotion Library. Please check the link below for details. 
 
@@ -12,9 +12,24 @@ This sensor module allows us to manage 3-axis accelerometer data which is provid
 [ Apple | Getting Raw Accelerometer Events ](https://developer.apple.com/documentation/coremotion/getting_raw_accelerometer_events)
 
 ## Requirements
-iOS 10 or later
+iOS 13 or later
 
 ## Installation
+
+
+You can integrate this framework into your project via Swift Package Manager (SwiftPM) or CocoaPods.
+
+### SwiftPM
+1. Open Package Manager Windows
+    * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...` 
+
+2. Find the package using the manager
+    * Select `Search Package URL` and type `git@github.com:tetujin/com.awareframework.ios.sensor.accelerometer.git`
+
+3. Import the package into your target.
+
+
+### CocoaPods
 
 com.aware.ios.sensor.accelerometer is available through [CocoaPods](http://cocoapods.org). To install it, simply add the following line to your Podfile:
 
