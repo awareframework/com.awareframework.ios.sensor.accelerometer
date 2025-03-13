@@ -1,8 +1,5 @@
 # AWARE: Accelerometer
 
-[![Version](https://img.shields.io/cocoapods/v/com.awareframework.ios.sensor.accelerometer.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.accelerometer)
-[![License](https://img.shields.io/cocoapods/l/com.awareframework.ios.sensor.accelerometer.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.accelerometer)
-[![Platform](https://img.shields.io/cocoapods/p/com.awareframework.ios.sensor.accelerometer.svg?style=flat)](https://cocoapods.org/pods/com.awareframework.ios.sensor.accelerometer)
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
 This sensor module allows us to manage 3-axis accelerometer data which is provided by iOS CoreMotion Library. Please check the link below for details. 
@@ -132,7 +129,7 @@ class Observer:AccelerometerObserver{
 ```
 
 ## Author
-Yuuki Nishiyama, yuuki.nishiyama@oulu.fi
+Yuuki Nishiyama (The University of Tokyo), nishiyama@csis.u-tokyo.ac.jp
 
 ## Related Links
 * [ Apple | Getting Raw Accelerometer Events ](https://developer.apple.com/documentation/coremotion/getting_raw_accelerometer_events)
