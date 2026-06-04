@@ -13,31 +13,13 @@ iOS 13 or later
 
 ## Installation
 
-
-You can integrate this framework into your project via Swift Package Manager (SwiftPM) or CocoaPods.
-
-### SwiftPM
 1. Open Package Manager Windows
     * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...` 
 
 2. Find the package using the manager
-    * Select `Search Package URL` and type `git@github.com:awareframework/com.awareframework.ios.sensor.accelerometer.git`
+    * Select `Search Package URL` and type `https://github.com/awareframework/com.awareframework.ios.sensor.accelerometer.git`
 
 3. Import the package into your target.
-
-
-### CocoaPods
-
-com.aware.ios.sensor.accelerometer is available through [CocoaPods](http://cocoapods.org). To install it, simply add the following line to your Podfile:
-
-```ruby
-pod 'com.awareframework.ios.sensor.accelerometer'
-```
-
-Import com.awareframework.ios.sensor.accelerometer library into your source code.
-```swift
-import com_awareframework_ios_sensor_accelerometer
-```
 
 ## Public functions
 
@@ -96,7 +78,6 @@ Contains the raw sensor data.
 | timestamp | Int64   | Unixtime milliseconds since 1970                                          |
 | timezone  | Int    | Timezone  of the device                                       |
 | os        | String | Operating system of the device (ex. android)                              |
-
 
 ### Example usage
 Import Accelerometer sensor library (com_aware_ios_sensor_accelerometer) to your target class.
