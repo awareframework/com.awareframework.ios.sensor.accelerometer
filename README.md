@@ -67,17 +67,17 @@ Class to hold the configuration of the sensor.
 
 Contains the raw sensor data.
 
-| Field     | Type   | Description                                                         |
-| --------- | ------ | ------------------------------------------------------------------- |
-| x         | Double | the acceleration force along the x axis, including gravity, in G (G=9.8m/s²)|
-| y         | Double | the acceleration force along the y axis, including gravity, in G (G=9.8m/s²) |
-| z         | Double | the acceleration force along the z axis, including gravity, in G (G=9.8m/s²) |
-| label     | String | Customizable label. Useful for data calibration or traceability     |
-| deviceId  | String | AWARE device UUID                                                                 |
-| label     | String | Customizable label. Useful for data calibration or traceability     |
-| timestamp | Int64   | Unixtime milliseconds since 1970                                          |
-| timezone  | Int    | Timezone  of the device                                       |
-| os        | String | Operating system of the device (ex. android)                              |
+| Field       | Type   | Description                                                         |
+| ----------- | ------ | ------------------------------------------------------------------- |
+| x           | Double | the acceleration force along the x axis, including gravity, in G (G=9.8m/s²)|
+| y           | Double | the acceleration force along the y axis, including gravity, in G (G=9.8m/s²) |
+| z           | Double | the acceleration force along the z axis, including gravity, in G (G=9.8m/s²) |
+| label       | String | Customizable label. Useful for data calibration or traceability     |
+| deviceId    | String | AWARE device UUID                                                   |
+| timestamp   | Int64  | Unixtime milliseconds since 1970                                    |
+| timezone    | Int    | Timezone of the device                                              |
+| os          | String | Operating system of the device (ex. ios)                            |
+| jsonVersion | Int    | JSON schema version                                                 |
 
 ### Example usage
 Import Accelerometer sensor library (com_aware_ios_sensor_accelerometer) to your target class.

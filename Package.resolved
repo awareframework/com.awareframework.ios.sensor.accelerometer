@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/awareframework/com.awareframework.ios.core.git",
       "state" : {
-        "revision" : "7d0c08213468420d623c2e2e6879e155d7e378d2",
-        "version" : "1.1.0"
+        "revision" : "f093377b1917527816aca398a26823d19e4f4216",
+        "version" : "1.2.0"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/groue/GRDB.swift.git",
       "state" : {
-        "revision" : "52b7b7bd26821c67f1c26b5e248fd6bcac4903a7",
-        "version" : "7.4.0"
+        "revision" : "9ed8c8457e00ff9c7aedb3bf213f20a2cfdf509e",
+        "version" : "7.11.0"
       }
     },
     {
