@@ -37,7 +37,7 @@ Class to hold the configuration of the sensor.
 
 + `sensorObserver: AccelerometerObserver`: Callback for live data updates.
 + `frequency: Int`: Data samples to collect per second (Hz). (default = 5)
-+ `period: Float`: Period to save data in minutes. (default = 1)
++ `period: Double`: Period to save data in minutes. (default = 1)
 + `threshold: Double`: If set, do not record consecutive points if change in value is less than the set value.
 + `enabled: Boolean` Sensor is enabled or not. (default = `false`)
 + `debug: Boolean` enable/disable logging to `Logcat`. (default = `false`)

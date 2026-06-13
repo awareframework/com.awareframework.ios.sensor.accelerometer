@@ -22,16 +22,17 @@ public struct AccelerometerData: BaseDbModelSQLite {
     public static let TABLE_NAME = "ios_accelerometer"
     public static let databaseTableName = TABLE_NAME
 
-    //    public var eventTimestamp : Int64 = 0
+    public var eventTimestamp: Int64 = 0
     public var x: Double = 0.0
     public var y: Double = 0.0
     public var z: Double = 0.0
 
-    public init(x: Double, y: Double, z: Double, timestamp: Int64, label: String = "") {
+    public init(x: Double, y: Double, z: Double, timestamp: Int64, eventTimestamp: Int64 = 0, label: String = "") {
         self.x = x
         self.y = y
         self.z = z
         self.timestamp = timestamp
+        self.eventTimestamp = eventTimestamp
         self.label = label
     }
 
@@ -42,7 +43,7 @@ public struct AccelerometerData: BaseDbModelSQLite {
         self.y = dict["y"] as? Double ?? 0
         self.z = dict["z"] as? Double ?? 0
         self.deviceId = dict["deviceId"] as? String ?? ""
-        //        self.eventTimestamp = dict["eventTime"] as? Int64 ?? 0
+        self.eventTimestamp = dict["eventTimestamp"] as? Int64 ?? 0
     }
 
     public static func createTable(queue: GRDB.DatabaseQueue) {
@@ -56,7 +57,7 @@ public struct AccelerometerData: BaseDbModelSQLite {
                     t.column("x", .double).notNull()
                     t.column("y", .double).notNull()
                     t.column("z", .double).notNull()
-                    //                    t.column("eventTime", .integer).notNull()
+                    t.column("eventTimestamp", .integer).notNull()
                     t.column("os", .text).notNull()
                     t.column("timezone", .integer).notNull()
                     t.column("jsonVersion", .integer).notNull()
@@ -70,6 +71,11 @@ public struct AccelerometerData: BaseDbModelSQLite {
 
     private static func migrateTableIfNeeded(_ db: GRDB.Database) throws {
         let columns = Set(try db.columns(in: AccelerometerData.databaseTableName).map(\.name))
+        if columns.contains("eventTimestamp") == false {
+            try db.alter(table: AccelerometerData.databaseTableName) { t in
+                t.add(column: "eventTimestamp", .integer).notNull().defaults(to: 0)
+            }
+        }
         if columns.contains("timezone") == false {
             try db.alter(table: AccelerometerData.databaseTableName) { t in
                 t.add(column: "timezone", .integer).notNull().defaults(to: AwareUtils.getTimeZone())
@@ -96,7 +102,10 @@ public struct AccelerometerData: BaseDbModelSQLite {
             "x": x,
             "y": y,
             "z": z,
-                //            "eventTimestamp": eventTimestamp
+            "eventTimestamp": eventTimestamp,
+            "os": os,
+            "timezone": timezone,
+            "jsonVersion": jsonVersion,
         ]
     }
 }

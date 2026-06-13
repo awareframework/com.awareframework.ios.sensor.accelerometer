@@ -70,6 +70,7 @@ public class AccelerometerSensor: AwareSensor {
     public var LAST_VALUE: CMAccelerometerData?
     private var LAST_TS: Double = 0.0
     private var LAST_SAVE: Double = 0.0
+    private var bootReferenceTime: Double = 0
 
     public class Config: SensorConfig {
         /**
@@ -153,6 +154,7 @@ public class AccelerometerSensor: AwareSensor {
     public override func start() {
         // Make sure the accelerometer hardware is available.
         if self.motion.isAccelerometerAvailable && !self.motion.isAccelerometerActive {
+            self.bootReferenceTime = Date().timeIntervalSince1970 - ProcessInfo.processInfo.systemUptime
             self.motion.accelerometerUpdateInterval = 1.0 / Double(CONFIG.frequency)
             self.motion.startAccelerometerUpdates(to: motionQueue) { [weak self] accData, error in
                 guard let self = self, let accData = accData else {
@@ -182,6 +184,7 @@ public class AccelerometerSensor: AwareSensor {
                     y: y,
                     z: z,
                     timestamp: Int64(currentTime * 1000),
+                    eventTimestamp: Int64((self.bootReferenceTime + accData.timestamp) * 1000),
                     label: self.CONFIG.label
                 )
 
