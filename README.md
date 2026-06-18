@@ -2,9 +2,9 @@
 
 [![Swift Package Manager compatible](https://img.shields.io/badge/Swift%20Package%20Manager-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 
-This sensor module allows us to manage 3-axis accelerometer data which is provided by iOS CoreMotion Library. Please check the link below for details. 
+This sensor module allows us to manage 3-axis accelerometer data which is provided by iOS CoreMotion Library. Please check the link below for details.
 
-> An accelerometer measures changes in velocity along one axis. All iOS devices have a three-axis accelerometer, which delivers acceleration values in each of the three axes. The values reported by the accelerometers are measured in increments of the gravitational acceleration, with the value 1.0 representing an acceleration of 9.8 meters per second (per second) in the given direction. Acceleration values may be positive or negative depending on the direction of the acceleration. 
+> An accelerometer measures changes in velocity along one axis. All iOS devices have a three-axis accelerometer, which delivers acceleration values in each of the three axes. The values reported by the accelerometers are measured in increments of the gravitational acceleration, with the value 1.0 representing an acceleration of 9.8 meters per second (per second) in the given direction. Acceleration values may be positive or negative depending on the direction of the acceleration.
 
 [ Apple | Getting Raw Accelerometer Events ](https://developer.apple.com/documentation/coremotion/getting_raw_accelerometer_events)
 
@@ -14,18 +14,18 @@ iOS 13 or later
 ## Installation
 
 1. Open Package Manager Windows
-    * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...` 
+    * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...`
 
 2. Find the package using the manager
     * Select `Search Package URL` and type `https://github.com/awareframework/com.awareframework.ios.sensor.accelerometer.git`
 
 3. Import the package into your target.
 
-## Public functions
+## Public Functions
 
 ### AccelerometerSensor
 
-+ `init(config:AccelerometerSensor.Config?)` : Initializes the accelerometer sensor with the optional configuration.
++ `init(config:AccelerometerSensor.Config?)`: Initializes the accelerometer sensor with the optional configuration.
 + `start()`: Starts the accelerometer sensor with the optional configuration.
 + `stop()`: Stops the service.
 
@@ -36,23 +36,23 @@ Class to hold the configuration of the sensor.
 #### Fields
 
 + `sensorObserver: AccelerometerObserver`: Callback for live data updates.
-+ `frequency: Int`: Data samples to collect per second (Hz). (default = 5)
-+ `period: Double`: Period to save data in minutes. (default = 1)
++ `samplingFrequencyHz: Int`: Data samples to collect per second (Hz). (default = `5`)
++ `saveIntervalSeconds: Double`: Interval in seconds at which buffered data is saved to the database. (default = `60`)
 + `threshold: Double`: If set, do not record consecutive points if change in value is less than the set value.
-+ `enabled: Boolean` Sensor is enabled or not. (default = `false`)
-+ `debug: Boolean` enable/disable logging to `Logcat`. (default = `false`)
-+ `label: String` Label for the data. (default = "")
-+ `deviceId: String` Id of the device that will be associated with the events and the sensor. (default = "")
-+ `dbEncryptionKey` Encryption key for the database. (default = `null`)
-+ `dbType: Engine` Which db engine to use for saving data. (default = `Engine.DatabaseType.NONE`)
-+ `dbPath: String` Path of the database. (default = "aware_accelerometer")
-+ `dbHost: String` Host for syncing the database. (default = `null`)
++ `enabled: Bool`: Sensor is enabled or not. (default = `false`)
++ `debug: Bool`: Enable/disable logging. (default = `false`)
++ `label: String`: Label for the data. (default = `""`)
++ `deviceId: String`: Id of the device that will be associated with the events and the sensor. (default = `""`)
++ `dbEncryptionKey: String?`: Encryption key for the database. (default = `nil`)
++ `dbType: DatabaseType`: Which db engine to use for saving data. (default = `.none`)
++ `dbPath: String`: Path of the database. (default = `"aware_accelerometer"`)
++ `dbHost: String?`: Host for syncing the database. (default = `nil`)
 
 ## Broadcasts
 
 ### Fired Broadcasts
 
-+ `AccelerometerSensor.ACTION_AWARE_ACCELEROMETER` fired when accelerometer saved data to db after the period ends.
++ `AccelerometerSensor.ACTION_AWARE_ACCELEROMETER`: fired when accelerometer saved data to db after the save interval ends.
 
 ### Received Broadcasts
 
@@ -89,9 +89,9 @@ import com_awareframework_ios_sensor_accelerometer
 Generate an accelerometer sensor instance and start/stop the sensor.
 
 ```swift
-let accelerometer = Accelerometer.init(Accelerometer.Config().apply{ config in
+let accelerometer = Accelerometer.init(Accelerometer.Config().apply { config in
    config.sensorObserver = Observer()
-   config.period   = 0.5
+   config.saveIntervalSeconds = 30
    config.deviceId = UUID.init().uuidString
    config.debug    = true
 })

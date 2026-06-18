@@ -77,9 +77,9 @@ public class AccelerometerSensor: AwareSensor {
          * The defualt value of Android is 200000 microsecond.
          * The value means 5Hz
          */
-        public var frequency: Int = 5  // Hz
+        public var samplingFrequencyHz: Int = 5  // Hz
 
-        public var period: Double = 1  // min
+        public var saveIntervalSeconds: Double = 60
         /**
          * Accelerometer threshold (Double).  Do not record consecutive points if
          * change in value of all axes is less than this.
@@ -95,16 +95,16 @@ public class AccelerometerSensor: AwareSensor {
 
         public override func set(config: [String: Any]) {
             super.set(config: config)
-            if let period = config["period"] as? Double {
-                self.period = period
+            if let saveIntervalSeconds = config["saveIntervalSeconds"] as? Double {
+                self.saveIntervalSeconds = saveIntervalSeconds
             }
 
             if let threshold = config["threshold"] as? Double {
                 self.threshold = threshold
             }
 
-            if let frequency = config["frequency"] as? Int {
-                self.frequency = frequency
+            if let samplingFrequencyHz = config["samplingFrequencyHz"] as? Int {
+                self.samplingFrequencyHz = samplingFrequencyHz
             }
         }
 
@@ -155,7 +155,7 @@ public class AccelerometerSensor: AwareSensor {
         // Make sure the accelerometer hardware is available.
         if self.motion.isAccelerometerAvailable && !self.motion.isAccelerometerActive {
             self.bootReferenceTime = Date().timeIntervalSince1970 - ProcessInfo.processInfo.systemUptime
-            self.motion.accelerometerUpdateInterval = 1.0 / Double(CONFIG.frequency)
+            self.motion.accelerometerUpdateInterval = 1.0 / Double(CONFIG.samplingFrequencyHz)
             self.motion.startAccelerometerUpdates(to: motionQueue) { [weak self] accData, error in
                 guard let self = self, let accData = accData else {
                     return
@@ -195,7 +195,7 @@ public class AccelerometerSensor: AwareSensor {
                 self.dataBuffer.append(data)
                 ////////////////////////////////////////
 
-                if currentTime < self.LAST_SAVE + (self.CONFIG.period * 60) {
+                if currentTime < self.LAST_SAVE + (self.CONFIG.saveIntervalSeconds) {
                     return
                 }
 
@@ -223,7 +223,7 @@ public class AccelerometerSensor: AwareSensor {
             if self.CONFIG.debug {
                 print(
                     AccelerometerSensor.TAG,
-                    "Accelerometer sensor active: \(self.CONFIG.frequency) hz")
+                    "Accelerometer sensor active: \(self.CONFIG.samplingFrequencyHz) hz")
             }
             self.notificationCenter.post(name: .actionAwareAccelerometerStart, object: self)
         }

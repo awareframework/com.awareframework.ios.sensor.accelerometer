@@ -42,8 +42,8 @@ class Tests: XCTestCase {
         observer.arExpectation = arExpect
         let sensor = AccelerometerSensor.init(AccelerometerSensor.Config().apply{config in
             config.debug = true
-            config.frequency = 10
-            config.period = 0
+            config.samplingFrequencyHz = 10
+            config.saveIntervalSeconds = 0
             config.sensorObserver = observer
             config.dbType = .sqlite
         })
@@ -149,26 +149,26 @@ class Tests: XCTestCase {
     
     func testConfig(){
         
-        let frequency = 1
+        let samplingFrequencyHz = 1
 
         // default check
         var sensor = AccelerometerSensor(AccelerometerSensor.Config())
-        XCTAssertEqual(5, sensor.CONFIG.frequency)
+        XCTAssertEqual(5, sensor.CONFIG.samplingFrequencyHz)
         
         sensor = AccelerometerSensor.init(AccelerometerSensor.Config.init().apply{config in
-            config.frequency = frequency
+            config.samplingFrequencyHz = samplingFrequencyHz
         })
-        XCTAssertEqual(frequency, sensor.CONFIG.frequency)
+        XCTAssertEqual(samplingFrequencyHz, sensor.CONFIG.samplingFrequencyHz)
         
-        sensor = AccelerometerSensor.init(AccelerometerSensor.Config(["frequency":frequency]))
-        XCTAssertEqual(frequency, sensor.CONFIG.frequency)
+        sensor = AccelerometerSensor.init(AccelerometerSensor.Config(["samplingFrequencyHz":samplingFrequencyHz]))
+        XCTAssertEqual(samplingFrequencyHz, sensor.CONFIG.samplingFrequencyHz)
         
         sensor = AccelerometerSensor.init(AccelerometerSensor.Config())
-        sensor.CONFIG.set(config: ["frequency":frequency])
-        XCTAssertEqual(frequency, sensor.CONFIG.frequency)
+        sensor.CONFIG.set(config: ["samplingFrequencyHz":samplingFrequencyHz])
+        XCTAssertEqual(samplingFrequencyHz, sensor.CONFIG.samplingFrequencyHz)
         
-        sensor.CONFIG.frequency = -10
-        XCTAssertEqual(sensor.CONFIG.frequency, -10)
+        sensor.CONFIG.samplingFrequencyHz = -10
+        XCTAssertEqual(sensor.CONFIG.samplingFrequencyHz, -10)
     }
     
 //    func testPerformanceExample() {
