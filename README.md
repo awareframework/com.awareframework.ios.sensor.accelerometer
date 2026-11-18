@@ -13,13 +13,15 @@ iOS 13 or later
 
 ## Installation
 
-1. Open Package Manager Windows
-    * Open `Xcode` -> Select `Menu Bar` -> `File` -> `App Package Dependencies...`
+Add the package with Swift Package Manager:
 
-2. Find the package using the manager
-    * Select `Search Package URL` and type `https://github.com/awareframework/com.awareframework.ios.sensor.accelerometer.git`
+- Package URL: `https://github.com/awareframework/com.awareframework.ios.sensor.accelerometer.git`
+- Product: `com.awareframework.ios.sensor.accelerometer`
+- Module: `import com_awareframework_ios_sensor_accelerometer`
 
-3. Import the package into your target.
+See the [core package README](https://github.com/awareframework/com.awareframework.ios.core#installation) for the Xcode, `Package.swift` and command-line installation steps.
+
+**Info.plist:** no usage description is required.
 
 ## Public Functions
 
