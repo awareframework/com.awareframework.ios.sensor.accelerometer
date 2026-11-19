@@ -16,6 +16,9 @@ extension Notification.Name {
         AccelerometerSensor.ACTION_AWARE_ACCELEROMETER)
     public static let actionAwareAccelerometerStart = Notification.Name(
         AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_START)
+    /// Posted by `start()` when the device has no accelerometer (for example, the iOS Simulator)
+    public static let actionAwareAccelerometerUnavailable = Notification.Name(
+        AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_UNAVAILABLE)
     public static let actionAwareAccelerometerStop = Notification.Name(
         AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_STOP)
     public static let actionAwareAccelerometerSetLabel = Notification.Name(
@@ -35,6 +38,8 @@ extension AccelerometerSensor {
     public static let ACTION_AWARE_ACCELEROMETER = "com.awareframework.ios.sensor.accelerometer"
     public static let ACTION_AWARE_ACCELEROMETER_START =
         "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_START"
+    public static let ACTION_AWARE_ACCELEROMETER_UNAVAILABLE =
+        "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_UNAVAILABLE"
     public static let ACTION_AWARE_ACCELEROMETER_STOP =
         "com.awareframework.ios.sensor.accelerometer.ACTION_AWARE_ACCELEROMETER_STOP"
     public static let ACTION_AWARE_ACCELEROMETER_SYNC =
@@ -119,9 +124,15 @@ public class AccelerometerSensor: AwareSensor {
 
     }
 
+    /// A sensor with the default configuration. (It used to call itself and never return.)
     public override convenience init() {
-        self.init()
-        configureSyncConfig()
+        self.init(AccelerometerSensor.Config())
+    }
+
+    /// Whether the device has an accelerometer. The iOS Simulator has none, so `start()` records
+    /// nothing there; use synthetic data to test on the Simulator.
+    public var isAvailable: Bool {
+        motion.isAccelerometerAvailable
     }
 
     private func configureSyncConfig() {
@@ -156,8 +167,14 @@ public class AccelerometerSensor: AwareSensor {
      * Start accelerometer sensor module
      */
     public override func start() {
-        // Make sure the accelerometer hardware is available.
-        if self.motion.isAccelerometerAvailable && !self.motion.isAccelerometerActive {
+        // Without the hardware (e.g. the iOS Simulator) nothing can be recorded: say so instead of
+        // returning silently
+        guard self.motion.isAccelerometerAvailable else {
+            print(AccelerometerSensor.TAG, "[Warning] No accelerometer on this device (the iOS Simulator has none): nothing is recorded.")
+            self.notificationCenter.post(name: .actionAwareAccelerometerUnavailable, object: self)
+            return
+        }
+        if !self.motion.isAccelerometerActive {
             self.bootReferenceTime = Date().timeIntervalSince1970 - ProcessInfo.processInfo.systemUptime
             self.motion.accelerometerUpdateInterval = 1.0 / Double(CONFIG.samplingFrequencyHz)
             self.motion.startAccelerometerUpdates(to: motionQueue) { [weak self] accData, error in
@@ -251,6 +268,10 @@ public class AccelerometerSensor: AwareSensor {
 
     /**
      * Sync accelerometer sensor module
+     *
+     * Uploads the stored rows now. `force` has no effect here, as in every sensor: the conditions
+     * `wifiOnly` and `batteryChargingOnly` are checked by `DbSyncManager.sync(_:)` before it asks
+     * the sensors to sync, and `force: true` there skips them.
      */
     public override func sync(force: Bool = false) {
         self.notificationCenter.post(name: .actionAwareAccelerometerSync, object: self)
