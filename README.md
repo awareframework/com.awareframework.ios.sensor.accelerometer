@@ -55,12 +55,15 @@ Class to hold the configuration of the sensor.
 ### Fired Broadcasts
 
 + `AccelerometerSensor.ACTION_AWARE_ACCELEROMETER`: fired when accelerometer saved data to db after the save interval ends.
++ `AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_UNAVAILABLE` (`.actionAwareAccelerometerUnavailable`): fired by `start()` when the device has no accelerometer, such as the iOS Simulator. Nothing is recorded then. `sensor.isAvailable` tells this before `start()`; to test on the Simulator, save synthetic `AccelerometerData` through `sensor.dbEngine`.
 
 ### Received Broadcasts
 
 + `AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_START`: received broadcast to start the sensor.
 + `AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_STOP`: received broadcast to stop the sensor.
 + `AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_SYNC`: received broadcast to send sync attempt to the host.
+
+`sensor.sync(force:)` uploads right away whatever `force` is, as in every sensor. `wifiOnly` and `batteryChargingOnly` are checked by `DbSyncManager.sync(_:)`, and `force: true` there skips them.
 + `AccelerometerSensor.ACTION_AWARE_ACCELEROMETER_SET_LABEL`: received broadcast to set the data label. Label is expected in the `AccelerometerSensor.EXTRA_LABEL` field of the intent extras.
 
 ## Data Representations

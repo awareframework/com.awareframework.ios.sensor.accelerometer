@@ -80,6 +80,25 @@ class Tests: XCTestCase {
         
     }
     
+    /// AccelerometerSensor() used to call itself until the stack overflowed
+    func testDefaultInitializerReturns() {
+        let sensor = AccelerometerSensor()
+        XCTAssertEqual(sensor.CONFIG.dbTableName, AccelerometerData.TABLE_NAME)
+        XCTAssertNotNil(sensor.dbEngine)
+        XCTAssertNotNil(sensor.syncConfig)
+    }
+
+    /// Without an accelerometer (the iOS Simulator), start() says so instead of doing nothing
+    func testStartWithoutAccelerometerNotifies() throws {
+        let sensor = AccelerometerSensor()
+        try XCTSkipIf(sensor.isAvailable, "This device has an accelerometer")
+        let unavailable = expectation(forNotification: .actionAwareAccelerometerUnavailable, object: sensor)
+        let started = expectation(forNotification: .actionAwareAccelerometerStart, object: sensor)
+        started.isInverted = true
+        sensor.start()
+        wait(for: [unavailable, started], timeout: 1)
+    }
+
     func testControllers(){
         
         let sensor = AccelerometerSensor.init(AccelerometerSensor.Config().apply{ config in
